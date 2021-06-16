@@ -1,9 +1,9 @@
-import lambdaTester from 'lambda-tester';
 import { expect } from 'chai';
-import { findOne, find, create, update, deleteOne } from '../app/handler';
-import * as booksMock from './books.mock';
-import { books as BooksModel } from '../app/model/books';
+import lambdaTester from 'lambda-tester';
 import sinon from 'sinon';
+import { create, deleteOne, find, findOne, update } from '../app/handler';
+import { books as BooksModel } from '../app/model/books';
+import * as booksMock from './books.mock';
 
 describe('FindOne [GET]', () => {
   it('success', () => {
@@ -17,14 +17,14 @@ describe('FindOne [GET]', () => {
         .resolves(booksMock.findOne);
 
       return lambdaTester(findOne)
-      .event({ pathParameters: { id: 25768396 } })
-      .expectResult((result: any) => {
-        expect(result.statusCode).to.equal(200);
-        const body = JSON.parse(result.body);
-        expect(body.code).to.equal(0);
-        s.verify();
-        s.restore();
-      });
+        .event({ pathParameters: { id: 25768396 } })
+        .expectResult((result: any) => {
+          expect(result.statusCode).to.equal(200);
+          const body = JSON.parse(result.body);
+          expect(body.code).to.equal(0);
+          s.verify();
+          s.restore();
+        });
     } catch (err) {
       console.log(err);
     }
@@ -39,13 +39,13 @@ describe('FindOne [GET]', () => {
         .rejects(booksMock.castError);
 
       return lambdaTester(findOne)
-      .event({ pathParameters: { id: 25768396 } })
-      .expectResult((result: any) => {
-        expect(result.statusCode).to.equal(200);
-        const body = JSON.parse(result.body);
-        expect(body.code).to.equal(1000);
-        s.restore();
-      });
+        .event({ pathParameters: { id: 25768396 } })
+        .expectResult((result: any) => {
+          expect(result.statusCode).to.equal(200);
+          const body = JSON.parse(result.body);
+          expect(body.code).to.equal(1000);
+          s.restore();
+        });
     } catch (err) {
       console.log(err);
     }
@@ -61,13 +61,13 @@ describe('Find [GET]', () => {
       .resolves(booksMock.find);
 
     return lambdaTester(find)
-    .event({})
-    .expectResult((result: any) => {
-      expect(result.statusCode).to.equal(200);
-      const body = JSON.parse(result.body);
-      expect(body.code).to.equal(0);
-      s.restore();
-    });
+      .event({})
+      .expectResult((result: any) => {
+        expect(result.statusCode).to.equal(200);
+        const body = JSON.parse(result.body);
+        expect(body.code).to.equal(0);
+        s.restore();
+      });
   });
 
   it('error', () => {
@@ -77,13 +77,13 @@ describe('Find [GET]', () => {
     s.expects('find').rejects(booksMock.findError);
 
     return lambdaTester(find)
-    .event({})
-    .expectResult((result: any) => {
-      expect(result.statusCode).to.equal(200);
-      const body = JSON.parse(result.body);
-      expect(body.code).to.equal(1000);
-      s.restore();
-    });
+      .event({})
+      .expectResult((result: any) => {
+        expect(result.statusCode).to.equal(200);
+        const body = JSON.parse(result.body);
+        expect(body.code).to.equal(1000);
+        s.restore();
+      });
   });
 });
 
@@ -95,10 +95,12 @@ describe('Create [POST]', () => {
     s.expects('create').resolves(booksMock.create);
 
     return lambdaTester(create)
-      .event({ body: JSON.stringify({
-        name: 'Node.js：来一打 C++ 扩展',
-        id: 30247892,
-      })})
+      .event({
+        body: JSON.stringify({
+          name: 'Node.js：来一打 C++ 扩展',
+          id: 30247892,
+        })
+      })
       .expectResult((result: any) => {
         expect(result.statusCode).to.equal(200);
         const body = JSON.parse(result.body);
@@ -114,10 +116,12 @@ describe('Create [POST]', () => {
     s.expects('create').rejects(booksMock.createError);
 
     return lambdaTester(create)
-      .event({ body: JSON.stringify({
-        name: 'Node.js：来一打 C++ 扩展',
-        id: 30247892,
-      })})
+      .event({
+        body: JSON.stringify({
+          name: 'Node.js：来一打 C++ 扩展',
+          id: 30247892,
+        })
+      })
       .expectResult((result: any) => {
         expect(result.statusCode).to.equal(200);
         const body = JSON.parse(result.body);
@@ -135,10 +139,12 @@ describe('Update [PUT]', () => {
     s.expects('findOneAndUpdate').resolves(booksMock.update);
 
     return lambdaTester(update)
-      .event({ pathParameters: { id: 30247892 }, body: JSON.stringify({
-        name: 'Node.js：来一打 C++ 扩展',
-        description: '阅读《Node.js：来一打 C++ 扩展》，相当于同时学习Chrome V8 开发、libuv 开发以及 Node.js 的原生 C++ 扩展开发知识，非常值得！',
-      })})
+      .event({
+        pathParameters: { id: 30247892 }, body: JSON.stringify({
+          name: 'Node.js：来一打 C++ 扩展',
+          description: '阅读《Node.js：来一打 C++ 扩展》，相当于同时学习Chrome V8 开发、libuv 开发以及 Node.js 的原生 C++ 扩展开发知识，非常值得！',
+        })
+      })
       .expectResult((result: any) => {
         expect(result.statusCode).to.equal(200);
         const body = JSON.parse(result.body);
@@ -154,10 +160,12 @@ describe('Update [PUT]', () => {
     s.expects('findOneAndUpdate').rejects(booksMock.castError);
 
     return lambdaTester(update)
-      .event({  pathParameters: { id: '30247892_' }, body: JSON.stringify({
-        name: 'Node.js：来一打 C++ 扩展',
-        description: '阅读《Node.js：来一打 C++ 扩展》，相当于同时学习Chrome V8 开发、libuv 开发以及 Node.js 的原生 C++ 扩展开发知识，非常值得！',
-      })})
+      .event({
+        pathParameters: { id: '30247892_' }, body: JSON.stringify({
+          name: 'Node.js：来一打 C++ 扩展',
+          description: '阅读《Node.js：来一打 C++ 扩展》，相当于同时学习Chrome V8 开发、libuv 开发以及 Node.js 的原生 C++ 扩展开发知识，非常值得！',
+        })
+      })
       .expectResult((result: any) => {
         expect(result.statusCode).to.equal(200);
         const body = JSON.parse(result.body);
@@ -175,7 +183,7 @@ describe('DeleteOne [Delete]', () => {
     s.expects('deleteOne').resolves(booksMock.deleteOne);
 
     return lambdaTester(deleteOne)
-      .event({  pathParameters: { id: 30247892 } })
+      .event({ pathParameters: { id: 30247892 } })
       .expectResult((result: any) => {
         expect(result.statusCode).to.equal(200);
         const body = JSON.parse(result.body);

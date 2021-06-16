@@ -1,12 +1,15 @@
 org: wilkcaetano
 app: create-users
 
+custom: ${file(serverless-env.yml)}
+
 service: creations
 provider:
   name: aws
   runtime: nodejs12.x
   environment:
-    NODE_ENV: dev
+    DB_URL: ${self:custom.DB_URL}
+    NODE_ENV: ${self:custom.NODE_ENV}
 
 plugins:
   - serverless-plugin-typescript 
@@ -26,35 +29,16 @@ functions:
       - http:
           path: users
           method: post
+  getUserAll:
+    handler: app/handlers/userHandlers.getAll
+    events:
+      - http:
+          path: users
+          method: get
+  getUserOne:
+    handler: app/handlers/userHandlers.getUserOne
+    events:
+      - http:
+          path: users/{id}
+          method: get              
           
-  create:
-    handler: app/handler.create
-    events:
-      - http:
-          path: books
-          method: post
-  update:
-    handler: app/handler.update
-    events:
-      - http:
-          path: books/{id}
-          method: put
-  find:
-    handler: app/handler.find
-    events:
-      - http:
-          path: books
-          method: get
-  findOne:
-    handler: app/handler.findOne
-    events:
-      - http:
-          path: books/{id}
-          method: get
-
-  deleteOne:
-    handler: app/handler.deleteOne
-    events:
-      - http:
-          path: books/{id}
-          method: delete

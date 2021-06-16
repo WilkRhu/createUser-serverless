@@ -1,29 +1,27 @@
 
 import { Context, Handler } from 'aws-lambda';
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import path from 'path';
 import { UserController } from '../controller/users';
 import { user } from '../model/users/users';
-
-const dotenvPath = path.join(__dirname, '../../', `config/.env.${process.env.NODE_ENV}`);
-
-dotenv.config({
-    path: dotenvPath,
-});
+import { UsersRepositories } from '../repositories/users';
 
 mongoose.connect(process.env.DB_URL, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
 });
 
-mongoose.connection.on('conected', () => {
+mongoose.connection.on('connected', () => {
     console.log('App connected')
 })
 
+const usersRepositories = new UsersRepositories(user);
 
-const userController = new UserController(user);
+const userController = new UserController(usersRepositories);
 
 export const create: Handler = (event: any, context: Context) => {
     return userController.create(event, context);
 };
+
+export const getAll: Handler = () => userController.getAll();
+
+export const getUserOne: Handler = (event: any) => userController.getOneUser(event);

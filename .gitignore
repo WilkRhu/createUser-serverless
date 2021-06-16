@@ -17,4 +17,4 @@ out-logger.json
 
 .DS_Store
 
-config
+serverless.env.yml
